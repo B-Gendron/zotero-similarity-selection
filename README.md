@@ -114,7 +114,11 @@ By default, the tool uses **mean + 2×std** as the threshold, which typically ca
 Create a `config/reference.txt` file that explain the scope of your research topic, using relevant key words. Here is an example:
 
 ```
-This research focuses on the application of machine learning techniques to climate change prediction, particularly deep learning models for temperature forecasting and extreme weather event detection. We are interested in methods that leverage satellite imagery, time-series analysis, and ensemble modeling approaches.
+This research focuses on the application of machine learning techniques 
+to climate change prediction, particularly deep learning models for 
+temperature forecasting and extreme weather event detection. We are 
+interested in methods that leverage satellite imagery, time-series analysis, 
+and ensemble modeling approaches.
 ```
 
 ## CSV Format Requirements
@@ -157,12 +161,26 @@ Claude Sonnet 4.5
 ### Prompt
 
 ```
-I want to select relevant papers from a zotero library with thousands of papers from an automatic extraction. The idea is the following:
+I want to select relevant papers from a zotero library with 
+thousands of papers from an automatic extraction. The idea is 
+the following:
 * export all the library (in a csv format, I suppose)
 * look at all the title+abstract of papers
-* have a reference short paragraph that describes the scope of papers that interest me (for instance, here I can describe the research project for which I did this litterature review)
-* compute SOTA sentence embeddings for all the paper title+abstract and for the reference paragraph
-* export a csv file of the selected papers given a threshold on the similarity (to select the threshold, we can for instance look at the similarities distribution and keep +/- 2*std).
+* have a reference short paragraph that describes the scope 
+of papers that interest me (for instance, here I can describe 
+the research project for which I did this litterature review)
+* compute SOTA sentence embeddings for all the paper title+abstract 
+and for the reference paragraph
+* export a csv file of the selected papers given a threshold 
+on the similarity (to select the threshold, we can for instance 
+look at the similarities distribution and keep +/- 2*std).
 
-I created a folder called zotero-similarity-selection/ to do that. Please write all the needed code for that. I would like the project to be well structured, so please put the different things in some separate scripts, and make it easily reusable in similar context (argparse to enter the csv file of the exported library, somewhere to specify the reference paragraph in a named txt file, and anything else you find relevant). I really want something clean to make a nice github repository that is actually helpful.
+I created a folder called zotero-similarity-selection/ to do that. 
+Please write all the needed code for that. I would like the project 
+to be well structured, so please put the different things in some 
+separate scripts, and make it easily reusable in similar context 
+(argparse to enter the csv file of the exported library, somewhere 
+to specify the reference paragraph in a named txt file, and anything 
+else you find relevant). I really want something clean to make a nice 
+github repository that is actually helpful.
 ```
