@@ -1,24 +1,30 @@
-# Zotero Similarity Selection
+# ZSS: Zotero Similarity Selection
+<p align="center">
+  <img 
+    src="https://github.com/user-attachments/assets/ee35c734-6384-4737-8139-3f4831dfa3ed"
+    alt="zss-logo-2-upscaled"
+    width="600"
+  />
+</p>
 
-A tool for filtering and selecting relevant papers from large Zotero libraries using state-of-the-art sentence embeddings and semantic similarity. This tool has been developed with the assistance of Claude (more details in AI Assistance Details section).
+A tool for filtering and selecting relevant papers from large Zotero libraries using state-of-the-art sentence embeddings and semantic similarity. This tool has been developed with the assistance of Claude (see [AI Assistance Details](#ai-assistance-details) Section).
 
 ## Overview
 
-This tool helps researchers efficiently filter thousands of papers exported from Zotero by computing semantic similarity between paper titles/abstracts and a reference description of your research scope.
+This tool helps researchers to efficiently filter thousands of papers gathered in a `.csv` file (for instance exported from Zotero) by computing semantic similarity between paper titles/abstracts and a reference description of your research scope. The selection is then exported in `.csv` and can be further converted to BiBTeX to be imported in Zotero. 
 
 ## Features
 
-- 🔍 **Semantic Similarity**: Uses state-of-the-art sentence embeddings (Sentence-BERT)
-- 📊 **Statistical Thresholding**: Automatically suggests similarity thresholds based on distribution statistics
-- 🎯 **Flexible Filtering**: Customize similarity thresholds or use automatic recommendations
-- 📁 **Clean Structure**: Modular, reusable code ready for different projects
-- 📈 **Visualization**: Generate distribution plots to understand your data
+- Computes semantic similarity between title/abstract of papers and a reference text using Sentence-BERT encoding (Reimers & Gurevych, 2019) and the `sentence-transformers` library (see [Models](#models) Section)
+- Analyzes similarity score distributions to derive data-driven similarity thresholds (both automatic threshold estimation and manual threshold specification)
+- Provides visualizations to facilitate interpretation of similarity scores and the choice of an appropriate thresholding strategy
+- Converts `.csv` output files to `.bib` to support Zotero import (import of `.csv` files directly is currently not possible in Zotero)
 
 ## Installation
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/zotero-similarity-selection.git
+git clone https://github.com/B-Gendron/zotero-similarity-selection.git
 cd zotero-similarity-selection
 ```
 
@@ -33,7 +39,6 @@ pip install -r requirements.txt
 
 2. **Create a reference text file** describing your research scope:
 ```bash
-# Edit config/reference.txt with your research description
 nano config/reference.txt
 ```
 
@@ -76,7 +81,11 @@ python main.py \
 
 ```
 zotero-similarity-selection/
-├── main.py                 
+├── main.py                 # Run the app 
+├── examples.py
+├── examples.py
+├── csv2bibtex.py           # Convert .csv file to .bib
+├── main.py           
 ├── src/
 │   ├── __init__.py
 │   ├── embeddings.py       
@@ -97,7 +106,7 @@ zotero-similarity-selection/
 1. **Load Data**: Reads the Zotero CSV export and extracts titles and abstracts
 2. **Encode Reference**: Computes sentence embeddings for your reference paragraph
 3. **Encode Papers**: Computes embeddings for each paper's title + abstract
-4. **Calculate Similarity**: Computes cosine similarity between each paper and the reference
+4. **Compute Similarity**: Computes cosine similarity between each paper and the reference
 5. **Filter Papers**: Selects papers above the similarity threshold
 6. **Export Results**: Saves selected papers to a new CSV file
 
@@ -107,7 +116,7 @@ By default, the tool uses **mean + 2×std** as the threshold, which typically ca
 
 - Let the tool auto-compute the threshold (recommended for first run)
 - Specify a custom threshold with `--threshold`
-- Use `--visualize` to see the distribution and adjust accordingly
+- Use `--visualize` to see the distribution and then adjust your threshold accordingly
 
 ## Example Reference Text
 
