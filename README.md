@@ -136,6 +136,22 @@ The tool generates:
 - Optional: A visualization of the similarity distribution (PNG)
 - Console output with statistics about the selection
 
+## Re-importing to Zotero
+
+Zotero doesn't support CSV import, but you can convert your selection to BibTeX format using the following script:
+
+```bash
+python csv_to_bibtex.py -i data/selected_papers.csv -o data/selected_papers.bib
+```
+
+Then in Zotero:
+1. File → Import...
+2. Select the `.bib` file
+3. Choose import options
+4. Click Continue
+
+Your selected papers will be imported into a new collection!
+
 ## Tips
 
 - **First run**: Use `--visualize --stats` to understand your similarity distribution
