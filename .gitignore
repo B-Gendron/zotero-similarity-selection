@@ -28,8 +28,10 @@ models/
 # Data files
 data/*.csv
 data/*.txt
+data/*.bib
 !data/.gitkeep
 !data/README.md
+config/reference_perso.txt
 
 # Output files
 *.png
