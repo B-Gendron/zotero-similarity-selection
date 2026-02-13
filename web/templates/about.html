@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Zotero Similarity Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📚 Zotero Similarity Selection</h1>
+            <p class="subtitle">About this tool</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="card">
+                <div class="card-body">
+                    <a href="/" class="btn btn-secondary">
+                        ← Back to App
+                    </a>
+                </div>
+                <div class="card-body readme-content">
+                    {{ readme_html|safe }}
+                </div>
+                <div class="card-body">
+                    <a href="/" class="btn btn-secondary">
+                        ← Back to App
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Developed with assistance from Claude (Anthropic's Claude Sonnet 4.5)</p>
+            <p>
+                <a href="https://github.com/B-Gendron/zotero-similarity-selection" target="_blank">GitHub</a> •
+                <a href="/">Home</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zotero Similarity Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📚 Zotero Similarity Selection</h1>
+            <p class="subtitle">Filter your Zotero library using semantic similarity</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Step 1: Upload -->
+            <section class="card" id="upload-section">
+                <div class="card-header">
+                    <span class="step-number">1</span>
+                    <h2>Upload Your Zotero Library</h2>
+                </div>
+                <div class="card-body">
+                    <div class="upload-area" id="upload-area">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                        </svg>
+                        <p class="upload-text">Drop your CSV file here or click to browse</p>
+                        <p class="upload-hint">Exported from Zotero (File → Export Library → CSV)</p>
+                        <input type="file" id="file-input" accept=".csv" hidden>
+                    </div>
+                    <div class="file-info" id="file-info" style="display: none;">
+                        <div class="file-name">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                <polyline points="13 2 13 9 20 9"/>
+                            </svg>
+                            <span id="file-name-text"></span>
+                        </div>
+                        <div class="file-stats">
+                            <span id="paper-count"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Configure -->
+            <section class="card" id="config-section" style="display: none;">
+                <div class="card-header">
+                    <span class="step-number">2</span>
+                    <h2>Define Your Research Scope</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="reference-text">Reference Paragraph</label>
+                        <textarea 
+                            id="reference-text" 
+                            rows="6" 
+                            placeholder="Describe your research focus here. For example: 'This research focuses on machine learning applications in climate prediction, particularly deep learning models for temperature forecasting and extreme weather detection...'"></textarea>
+                        <p class="help-text">Describe the types of papers you're looking for. Be specific about methods, topics, and applications.</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="form-group">
+                            <label for="threshold-method">Threshold Method</label>
+                            <select id="threshold-method">
+                                <option value="mean_2std">Auto (Mean + 2×SD) - Recommended</option>
+                                <option value="mean_1std">Lenient (Mean + 1×SD)</option>
+                                <option value="percentile_90">Top 10%</option>
+                                <option value="percentile_75">Top 25%</option>
+                                <option value="median">Top 50%</option>
+                                <option value="custom">Custom Threshold</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="custom-threshold-group" style="display: none;">
+                            <label for="custom-threshold">Custom Threshold</label>
+                            <input type="number" id="custom-threshold" step="0.01" min="0" max="1" value="0.3">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="model-select">Model</label>
+                            <select id="model-select">
+                                <option value="sentence-transformers/all-mpnet-base-v2">Best Quality (MPNet)</option>
+                                <option value="sentence-transformers/all-MiniLM-L6-v2">Faster (MiniLM)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-large" id="process-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        Process Papers
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 3: Results -->
+            <section class="card" id="results-section" style="display: none;">
+                <div class="card-header">
+                    <span class="step-number">3</span>
+                    <h2>Results</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Statistics -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-total">-</div>
+                            <div class="stat-label">Total Papers</div>
+                        </div>
+                        <div class="stat-card highlight">
+                            <div class="stat-value" id="stat-selected">-</div>
+                            <div class="stat-label">Selected Papers</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-percentage">-</div>
+                            <div class="stat-label">Selection Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-threshold">-</div>
+                            <div class="stat-label">Similarity Threshold</div>
+                        </div>
+                    </div>
+
+                    <!-- Similarity Distribution Chart -->
+                    <div class="chart-container">
+                        <h3>Similarity Distribution</h3>
+                        <canvas id="similarity-chart"></canvas>
+                    </div>
+
+                    <!-- Download Buttons -->
+                    <div class="download-section">
+                        <h3>Download Selected Papers</h3>
+                        <div class="button-group">
+                            <button class="btn btn-secondary" id="download-csv">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                </svg>
+                                Download CSV
+                            </button>
+                            <button class="btn btn-secondary" id="download-bib">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                </svg>
+                                Download BibTeX
+                            </button>
+                        </div>
+                        <p class="help-text">Import the BibTeX file into Zotero: File → Import...</p>
+                    </div>
+
+                    <!-- Start Over -->
+                    <button class="btn btn-text" id="start-over">
+                        ← Start Over
+                    </button>
+                </div>
+            </section>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loading-overlay" style="display: none;">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <p id="loading-text">Processing papers...</p>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="error-message" style="display: none;">
+                <div class="error-content">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <span id="error-text"></span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Developed with assistance from Claude (Anthropic's Claude Sonnet 4.5)</p>
+            <p>
+                <a href="https://github.com/B-Gendron/zotero-similarity-selection" target="_blank">GitHub</a> •
+                <a href="#" id="about-link">About</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Chart.js for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
