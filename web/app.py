@@ -8,6 +8,9 @@ Run with: python web/app.py
 
 import os
 import sys
+import argparse
+import markdown
+import traceback
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify, send_file, session, Response
 import json
@@ -173,7 +176,6 @@ def process_papers():
         })
         
     except Exception as e:
-        import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
@@ -233,8 +235,6 @@ def health():
 def about():
     """Render the about page with README content."""
     try:
-        import markdown
-        
         # Read the main README file
         readme_path = Path(__file__).parent.parent / 'README.md'
         with open(readme_path, 'r', encoding='utf-8') as f:
@@ -253,12 +253,19 @@ def about():
 
 
 if __name__ == '__main__':
+    
+    parser = argparse.ArgumentParser(description='Zotero Similarity Selection Web Interface')
+    parser.add_argument('--port', type=int, default=5000, help='Port to run the server on (default: 5000)')
+    parser.add_argument('--host', type=str, default='0.0.0.0', help='Host to bind to (default: 0.0.0.0)')
+    parser.add_argument('--debug', action='store_true', help='Run in debug mode')
+    args = parser.parse_args()
+    
     print("\n" + "="*70)
     print("ZOTERO SIMILARITY SELECTION - WEB INTERFACE")
     print("="*70)
     print("\nStarting web server...")
-    print("Open your browser and navigate to: http://localhost:5000")
+    print(f"Open your browser and navigate to: http://localhost:{args.port}")
     print("\nPress Ctrl+C to stop the server")
     print("="*70 + "\n")
     
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    app.run(debug=args.debug, host=args.host, port=args.port)
