@@ -165,7 +165,7 @@ See [Sentence Transformers documentation](https://www.sbert.net/docs/pretrained_
 
 Claude Sonnet 4.5
 
-### Prompt
+### Prompt for Creating the App
 
 ```
 I want to select relevant papers from a zotero library with thousands of papers from an automatic extraction. The idea is the following:
@@ -176,4 +176,9 @@ I want to select relevant papers from a zotero library with thousands of papers 
 * export a csv file of the selected papers given a threshold on the similarity (to select the threshold, we can for instance look at the similarities distribution and keep +/- 2*std).
 
 I created a folder called zotero-similarity-selection/ to do that. Please write all the needed code for that. I would like the project to be well structured, so please put the different things in some separate scripts, and make it easily reusable in similar context (argparse to enter the csv file of the exported library, somewhere to specify the reference paragraph in a named txt file, and anything else you find relevant). I really want something clean to make a nice github repository that is actually helpful.
+```
+### Prompt for Developing the Web Version
+
+```
+I would like to create a simple, modern and minimalistic web interface for this app. As much as possible, put all the web utils in separated folders so the the app is still runnable from the terminal without issue.
 ```
