@@ -182,3 +182,7 @@ I created a folder called zotero-similarity-selection/ to do that. Please write 
 ```
 I would like to create a simple, modern and minimalistic web interface for this app. As much as possible, put all the web utils in separated folders so the the app is still runnable from the terminal without issue.
 ```
+
+## Contributing
+
+I would be glad to receive feedback on this tool! Please open an issue to report a bug or suggest new features, or even send a PR.
